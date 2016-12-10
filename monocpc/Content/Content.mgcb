@@ -1,0 +1,156 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin
+/intermediateDir:obj
+/platform:Windows
+/config:
+/profile:Reach
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+
+#---------------------------------- Content ---------------------------------#
+
+#begin rom/CPC464.ROM
+/copy:rom/CPC464.ROM
+
+#begin CRT.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:CRT.fx
+
+#begin DebugFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:DebugFont.spritefont
+
+#begin manifest.manifest
+/copy:manifest.manifest
+
+#begin white.bmp
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:white.bmp
+
+#begin sna/Astro Attack.sna
+/copy:sna/Astro Attack.sna
+
+#begin sna/Barbarian.sna
+/copy:sna/Barbarian.sna
+
+#begin sna/Beach-Head.sna
+/copy:sna/Beach-Head.sna
+
+#begin sna/Chuckie Egg.sna
+/copy:sna/Chuckie Egg.sna
+
+#begin sna/Dizzy.sna
+/copy:sna/Dizzy.sna
+
+#begin sna/Eagles Nest.sna
+/copy:sna/Eagles Nest.sna
+
+#begin sna/Finders Keepers.sna
+/copy:sna/Finders Keepers.sna
+
+#begin sna/Friday The 13th.sna
+/copy:sna/Friday The 13th.sna
+
+#begin sna/Ghost Hunters.sna
+/copy:sna/Ghost Hunters.sna
+
+#begin sna/Ghostbusters.sna
+/copy:sna/Ghostbusters.sna
+
+#begin sna/Ikari Warriors.sna
+/copy:sna/Ikari Warriors.sna
+
+#begin sna/Joe Blade 3.sna
+/copy:sna/Joe Blade 3.sna
+
+#begin sna/Lemmings.sna
+/copy:sna/Lemmings.sna
+
+#begin sna/Lost Caves.sna
+/copy:sna/Lost Caves.sna
+
+#begin sna/Manic Miner.sna
+/copy:sna/Manic Miner.sna
+
+#begin sna/Monty On The Run.sna
+/copy:sna/Monty On The Run.sna
+
+#begin sna/Nebulus.sna
+/copy:sna/Nebulus.sna
+
+#begin sna/Prince of the Yolkfolk.sna
+/copy:sna/Prince of the Yolkfolk.sna
+
+#begin sna/Rainbow Islands.sna
+/copy:sna/Rainbow Islands.sna
+
+#begin sna/Rocky Horror.sna
+/copy:sna/Rocky Horror.sna
+
+#begin sna/Roland In Space.sna
+/copy:sna/Roland In Space.sna
+
+#begin sna/Roland In Time.sna
+/copy:sna/Roland In Time.sna
+
+#begin sna/Roland On The Ropes.sna
+/copy:sna/Roland On The Ropes.sna
+
+#begin sna/Sorcery.sna
+/copy:sna/Sorcery.sna
+
+#begin sna/Spindizzy.sna
+/copy:sna/Spindizzy.sna
+
+#begin sna/Spy vs Spy.sna
+/copy:sna/Spy vs Spy.sna
+
+#begin sna/Strangeloop.sna
+/copy:sna/Strangeloop.sna
+
+#begin sna/Super Sleuth.sna
+/copy:sna/Super Sleuth.sna
+
+#begin sna/Survivor.sna
+/copy:sna/Survivor.sna
+
+#begin sna/Temple Of Doom.sna
+/copy:sna/Temple Of Doom.sna
+
+#begin sna/The Addams Family.sna
+/copy:sna/The Addams Family.sna
+
+#begin sna/Thing On A Spring.sna
+/copy:sna/Thing On A Spring.sna
+
+#begin sna/Tombstowne.sna
+/copy:sna/Tombstowne.sna
+
+#begin sna/Tubaruba.sna
+/copy:sna/Tubaruba.sna
+
+#begin sna/Turrican 2.sna
+/copy:sna/Turrican 2.sna
+
+#begin sna/Vampire.sna
+/copy:sna/Vampire.sna
+
+#begin sna/Werewolves of London.sna
+/copy:sna/Werewolves of London.sna
+
