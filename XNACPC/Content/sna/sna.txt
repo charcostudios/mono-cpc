@@ -1,4 +1,0 @@
-SNA files go here...
-
-You can download a package that has just the .rom and .sna files, here:
-http://www.gavpugh.com/xnacpc/xnacpc_1_0_rom_sna.zip
