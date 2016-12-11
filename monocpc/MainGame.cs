@@ -207,7 +207,7 @@ namespace monocpc {
 
             m_crt_effect_border = Content.Load<Effect>("crt");
             m_crt_effect_border.Parameters["Viewport"].SetValue(new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
-            m_crt_effect_border.Parameters["TextureHeight"].SetValue((float)GraphicsDevice.Viewport.Height / CPC_PIXEL_HEIGHT);
+            m_crt_effect_border.Parameters["TextureHeight"].SetValue((float)(GraphicsDevice.Viewport.Height / CPC_PIXEL_HEIGHT));
             m_crt_effect_border.Parameters["ScreenHeight"].SetValue((float)GraphicsDevice.Viewport.Height);
 
             m_crt_effect_screen = m_crt_effect_border.Clone();

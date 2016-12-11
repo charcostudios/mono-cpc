@@ -24,7 +24,11 @@ void SpriteVertexShader(inout float4 color    : COLOR0,
 float4 SpritePixelShader(float2 texCoord: TEXCOORD0,
 						float4 diffuseColor: COLOR) : COLOR 
 { 
+	//return float4(1,0,0,1);
+
 	float4 color = tex2D(TextureSampler, texCoord) * diffuseColor;
+
+	//return color;
 
 	// Find height of a CPC pixel
 	float pix_height = ( ScreenHeight / TextureHeight );
