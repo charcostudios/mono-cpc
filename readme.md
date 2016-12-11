@@ -7,8 +7,8 @@ Port of XNACPC to Monogame
 
 # Not working yet
 
-Audio doesn't work.
-CRT shader doesn't work.
+* Audio doesn't work.
+* CRT shader doesn't work.
 
 # Version History
 
