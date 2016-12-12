@@ -7,8 +7,8 @@ Port of XNACPC to Monogame
 
 # Not working yet
 
-* Audio doesn't work.
-* CRT shader doesn't work.
+* Audio doesn't work. DynamicSoundEffectInstance is implemented in develop branch of monogame, so waiting for next release to make it work. 
+
 
 # Version History
 
