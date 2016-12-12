@@ -12,12 +12,8 @@ using System.Linq;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Storage;
 
 namespace monocpc {
     /// <summary>
@@ -122,7 +118,8 @@ namespace monocpc {
             var existingInstance = new BinaryFile();
             existingInstance.m_data = System.IO.File.ReadAllBytes(filename);
             existingInstance.m_data_size = existingInstance.m_data.Length;
-            return existingInstance;   //return Content.Load<BinaryFile>( filename );
+            return existingInstance;   
+            //return Content.Load<BinaryFile>( filename );
         }
 
         protected override void Initialize() {
@@ -240,7 +237,7 @@ namespace monocpc {
             pause_menu_options.Add("Throttle Speed");   //ThrottleSpeed
             pause_menu_options.Add("Quit");			//Quit
 
-            m_pause_menu.SetupMenu("XNACPC - Gavin Pugh 2011", pause_menu_options, PauseCallback);
+            m_pause_menu.SetupMenu("MONOCPC - Gavin Pugh 2011 - CharcoStudios 2016", pause_menu_options, PauseCallback);
             m_pause_menu.SetupMenuToggle((int)EPauseMenuOptions.ThrottleSpeed, m_throttle_speed);
             m_pause_menu.SetupMenuToggle((int)EPauseMenuOptions.ToggleCRTShader, m_use_crt_shader);
 
