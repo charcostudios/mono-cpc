@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MonoCpc>
+  <Rom>CPC464,0</Rom>
+  <DebugFont>false</DebugFont>
+  <UseCRT>false</UseCRT>
+  <White>false</White>
+
+  <Sna file="Astro Attack" size="65792" />
+  <Sna file="Dizzy" size="65792" />
+  <Sna file="Finders Keepers" size="65792" />
+  <Sna file="Friday The 13th" size="65792" />
+  <Sna file="Roland In Time" size="65792" />
+  <Sna file="Strangeloop" size="65792" />
+  <Sna file="Survivor" size="65792" />
+  <Sna file="Tombstowne" size="65792" />
+  <Sna file="Eagles Nest" size="65792" />
+  <Sna file="Manic Miner" size="65792" >
+    <Cheat title="Infinite lives">
+      <Poke address="#6FA9" value="0"/>
+    </Cheat>
+    <Cheat title="Disable sprite collision">
+      <Poke address="#718A" value="0"/>
+      <Poke address="#77BE" value="0"/>
+      <Poke address="#7187" value="0"/>
+      <Poke address="#71F8" value="0"/>
+      <Poke address="#7216" value="0"/>
+      <Poke address="#70C4" value="0"/>
+      <Poke address="#70C7" value="0"/>
+      <Poke address="#7219" value="0"/>
+      <Poke address="#71FB" value="0"/>
+    </Cheat>
+    <Cheat title="Drop from any height without dying">
+      <Poke address="#713E" value="0"/>
+    </Cheat>
+    <Cheat title="Infinite Air">
+      <Poke address="#7977" value="#C9"/>
+    </Cheat>
+    <Cheat title="Exit always open">
+      <Poke address="#79C1" value="0"/>
+      <Poke address="#79C2" value="0"/>
+      <Poke address="#79C3" value="0"/>
+    </Cheat>
+  </Sna>
+  <Sna file="Roland On The Ropes" size="65792" />
+  <Sna file="Super Sleuth" size="65792" /> />
+  <Sna file="Roland In Space" size="65792" />
+  <Sna file="Sorcery" size="65792" />
+  <Sna file="Monty On The Run" size="65792" />
+  <Sna file="Rocky Horror" size="65792" />
+  <Sna file="Thing On A Spring" size="65792" />
+  <Sna file="Tubaruba" size="65792" />
+  <Sna file="Ghost Hunters" size="65792" />
+  <Sna file="Ghostbusters" size="65792" />
+  <Sna file="Joe Blade 3" size="65792" />
+  <Sna file="Nebulus" size="65792" />
+  <Sna file="Spindizzy" size="65792" />
+  <Sna file="Spy vs Spy" size="65792" />
+  <Sna file="Werewolves of London" size="65792" />
+  <Sna file="Chuckie Egg" size="65792" />
+  <Sna file="Ikari Warriors" size="65792" />
+  <Sna file="Lemmings" size="65792" />
+  <Sna file="Lost Caves" size="65792" />
+  <Sna file="Rainbow Islands" size="65792" />
+  <Sna file="Temple Of Doom" size="65792" />
+  <Sna file="The Addams Family" size="65792" />
+  <Sna file="Turrican 2" size="65792" />
+  <Sna file="Vampire" size="65792" />
+  <Sna file="Barbarian" size="65792" />
+  <Sna file="Beach-Head" size="65792" />
+  <Sna file="Prince of the Yolkfolk" size="131328"/>w
+</MonoCpc>

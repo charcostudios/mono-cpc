@@ -14,11 +14,11 @@ using Microsoft.Xna.Framework.Media;
 
 namespace monocpc
 {
-	public class ListMenuComponent : Microsoft.Xna.Framework.DrawableGameComponent
-	{
-		public delegate void MenuCallback( int chosen_index );
+	public abstract class ListMenuComponent : Microsoft.Xna.Framework.DrawableGameComponent
+	{ 
+		protected abstract void MenuCallback( int chosen_index );
 
-		SpriteBatch m_sprite_batch;
+        SpriteBatch m_sprite_batch;
 		SpriteFont m_sprite_font;
 		Texture2D m_white_texture;
 
@@ -45,12 +45,12 @@ namespace monocpc
         MenuItem[] m_menu_choices;
         int m_menu_index;
         bool m_active;
+        protected MainGame m_game;
 
-        MenuCallback m_callback = null;
-
-		public ListMenuComponent( Game game, Rectangle menu_extents )
+        public ListMenuComponent( MainGame game, Rectangle menu_extents )
 			: base( game )
         {
+            m_game = game;
             m_menu_choices = null;
             m_menu_extents = menu_extents;
             m_menu_index = -1;
@@ -58,11 +58,10 @@ namespace monocpc
             m_active = false;
 		}
 
-		public void SetupMenu( string title, List<string> items, MenuCallback callback )
+		protected void SetupMenu( string title, List<string> items )
 		{
 			m_title = title;
 			m_menu_index = 0;
-			m_callback = callback;
 			m_active = false;
 
             m_menu_choices = new MenuItem[items.Count];
@@ -93,7 +92,7 @@ namespace monocpc
             m_intro_text = msg;
         }
 
-        public void SetupMenuToggle( int index, bool current_setting )
+        protected void SetupMenuToggle( int index, bool current_setting )
         {
             m_menu_choices[index].m_is_toggle = true;
             m_menu_choices[index].m_toggle_on = current_setting;
@@ -134,14 +133,14 @@ namespace monocpc
                             m_menu_choices[m_menu_index].m_toggle_on = !m_menu_choices[m_menu_index].m_toggle_on;
                         }
 
-						m_callback( m_menu_index );
+						MenuCallback( m_menu_index );
 					}
 					break;
 
 				case MenuInputComponent.EMenuInput.Back:
 				case MenuInputComponent.EMenuInput.Start:
 					{
-						m_callback( -1 );
+                            MenuCallback( -1 );
 					}
 					break;
 				}		
@@ -171,7 +170,7 @@ namespace monocpc
 					Color.Red,
 					0.0f,
 					new Vector2( 0.0f, 0.0f ),
-					1.0f,
+					0.85f,
 					SpriteEffects.None,
 					1.0f );
 
@@ -266,10 +265,14 @@ namespace monocpc
 
 		public void ShowMenu()
 		{
+            OnBeforeShowMenu();
 			m_active = true;
 		}
 
-		public void Close()
+        protected virtual void OnBeforeShowMenu() {
+        }
+
+        public void Close()
 		{
 			m_active = false;
 		}

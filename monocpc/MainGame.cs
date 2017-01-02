@@ -25,8 +25,11 @@ namespace monocpc {
         static readonly long TARGET_FRAME_TIME;
 
         GraphicsDeviceManager m_graphics;
-        ListMenuComponent m_pause_menu;
-        ListMenuComponent m_snapshot_menu;
+
+        public PauseMenu m_pause_menu;
+        public LoadSnapShotMenu m_snapshot_menu;
+        public CheatsMenu m_cheats_menu;
+
         SpriteBatch m_sprite_batch;
         Rectangle m_screen_rect;
         Rectangle m_border_rect;
@@ -48,22 +51,12 @@ namespace monocpc {
         Audio m_audio;
         string m_startup_load_sna;
 
-        List<String> m_snapshot_files;
+        //public List<String> m_snapshot_files;
 
-        bool m_paused;
-        bool m_use_crt_shader;
-        bool m_throttle_speed;
-
-
-        private enum EPauseMenuOptions {
-            Back = -1,
-            Resume = 0,
-            LoadSnapshot,
-            Reset,
-            ToggleCRTShader,
-            ThrottleSpeed,
-            Quit
-        }
+        public bool m_paused;
+        public bool m_use_crt_shader;
+        public bool m_throttle_speed;
+        public SnaManifest m_current_game;
 
         static MainGame() {
             // Frequency is over one second. So this calculates the time for one frame, in 'Stopwatch' timer ticks.
@@ -76,7 +69,7 @@ namespace monocpc {
             m_graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            m_snapshot_files = new List<String>(64);
+            //m_snapshot_files = new List<String>(64);
             m_use_crt_shader = true;
             m_paused = false;
 
@@ -118,7 +111,7 @@ namespace monocpc {
             var existingInstance = new BinaryFile();
             existingInstance.m_data = System.IO.File.ReadAllBytes(filename);
             existingInstance.m_data_size = existingInstance.m_data.Length;
-            return existingInstance;   
+            return existingInstance;
             //return Content.Load<BinaryFile>( filename );
         }
 
@@ -151,11 +144,18 @@ namespace monocpc {
                 menu_width,
                 GraphicsDevice.Viewport.Height);
 
-            m_pause_menu = new ListMenuComponent(this, menu_extents);
+            // List snapshots that can be played
+            //GetSnapshotFileList();
+            Manifest.Load("content\\manifest.xml");
+
+            m_pause_menu = new PauseMenu(this, menu_extents);
             Components.Add(m_pause_menu);
 
-            m_snapshot_menu = new ListMenuComponent(this, menu_extents);
+            m_snapshot_menu = new LoadSnapShotMenu(this, menu_extents);
             Components.Add(m_snapshot_menu);
+
+            m_cheats_menu = new CheatsMenu(this, menu_extents);
+            Components.Add(m_cheats_menu);
 
             Components.Add(new MenuInputComponent(this));
 
@@ -173,30 +173,32 @@ namespace monocpc {
             base.Initialize();
         }
 
-        private void GetSnapshotFileList() {
-            List<string> contentFiles = File.ReadAllLines("content\\manifest.manifest").ToList();
+        //private void GetSnapshotFileList() {
 
-            foreach (String path in contentFiles) {
-                int last_slash = path.IndexOf('\\');
-                if (last_slash > 0) {
-                    string directory = path.Substring(0, last_slash);
-                    string pathWithoutSnaDir = path.Substring(last_slash + 1);
 
-                    if (directory == "sna") {
-                        string[] sna_and_size = pathWithoutSnaDir.Split(',');
-                        int size = Convert.ToInt32(sna_and_size[1]);
-                        if ((size > (128 * 1024)) && (CPC.Memory.TOTAL_RAM_NUM_BANKS == 4)) {
-                            // This is a 128k snapshot, but this Amstrad being emulated is only 64k. Ignore it.
-                        }
-                        else {
-                            m_snapshot_files.Add(sna_and_size[0]);
-                        }
-                    }
-                }
-            }
+        //    List<string> contentFiles = File.ReadAllLines("content\\manifest.manifest").ToList();
 
-            m_snapshot_files.Sort();
-        }
+        //    foreach (String path in contentFiles) {
+        //        int last_slash = path.IndexOf('\\');
+        //        if (last_slash > 0) {
+        //            string directory = path.Substring(0, last_slash);
+        //            string pathWithoutSnaDir = path.Substring(last_slash + 1);
+
+        //            if (directory == "sna") {
+        //                string[] sna_and_size = pathWithoutSnaDir.Split(',');
+        //                int size = Convert.ToInt32(sna_and_size[1]);
+        //                if ((size > (128 * 1024)) && (CPC.Memory.TOTAL_RAM_NUM_BANKS == 4)) {
+        //                    // This is a 128k snapshot, but this Amstrad being emulated is only 64k. Ignore it.
+        //                }
+        //                else {
+        //                    m_snapshot_files.Add(sna_and_size[0]);
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    m_snapshot_files.Sort();
+        //}
 
         protected override void LoadContent() {
             m_sprite_batch = new SpriteBatch(GraphicsDevice);
@@ -214,7 +216,9 @@ namespace monocpc {
 
             m_texture_display = new TextureDisplay(GraphicsDevice);
             m_audio = new Audio();
-            m_emulator = new CPC.Emulator(m_audio, m_texture_display);
+
+            CPC.Emulator.Create(m_audio, m_texture_display);
+            m_emulator = CPC.Emulator.Instance;
 
             for (PlayerIndex index = PlayerIndex.One; index <= PlayerIndex.Four; index++) {
                 // For now all gamepads respond as joystick 0
@@ -226,32 +230,34 @@ namespace monocpc {
             m_emulator.Memory.LoadROM(CPC.ROM.LOWER_ROM_INDEX, rom_file.m_data, 0);
             m_emulator.Memory.LoadROM(CPC.ROM.BASIC_ROM_INDEX, rom_file.m_data, CPC.ROM.ROM_SIZE);
 
-            // List snapshots that can be played
-            GetSnapshotFileList();
 
-            List<string> pause_menu_options = new List<string>();
-            pause_menu_options.Add("Unpause");      //Resume
-            pause_menu_options.Add("Load Snapshot");	//LoadSnapshot
-            pause_menu_options.Add("Reset CPC");		//Reset
-            pause_menu_options.Add("Toggle CRT Shader");	//ToggleCRTShader
-            pause_menu_options.Add("Throttle Speed");   //ThrottleSpeed
-            pause_menu_options.Add("Quit");			//Quit
 
-            m_pause_menu.SetupMenu("MONOCPC - Gavin Pugh 2011 - CharcoStudios 2016", pause_menu_options, PauseCallback);
-            m_pause_menu.SetupMenuToggle((int)EPauseMenuOptions.ThrottleSpeed, m_throttle_speed);
-            m_pause_menu.SetupMenuToggle((int)EPauseMenuOptions.ToggleCRTShader, m_use_crt_shader);
+            //List<string> pause_menu_options = new List<string>();
+            //pause_menu_options.Add("Unpause");      //Resume
+            //pause_menu_options.Add("Redefine input");      //Resume
+            //pause_menu_options.Add("Load Snapshot");	//LoadSnapshot
+            //pause_menu_options.Add("Reset CPC");		//Reset
+            //pause_menu_options.Add("Toggle CRT Shader");	//ToggleCRTShader
+            //pause_menu_options.Add("Throttle Speed");   //ThrottleSpeed
+            //pause_menu_options.Add("Quit");			//Quit
 
-            m_snapshot_menu.SetupMenu("Choose a snapshot", m_snapshot_files, SnapshotCallback);
+            //m_pause_menu.SetupMenu("MONOCPC - Gavin Pugh 2011 - CharcoStudios 2016", pause_menu_options, PauseCallback);
+            //m_pause_menu.SetupMenuToggle((int)EPauseMenuOptions.ThrottleSpeed, m_throttle_speed);
+            //m_pause_menu.SetupMenuToggle((int)EPauseMenuOptions.ToggleCRTShader, m_use_crt_shader);
+
+            //m_snapshot_menu.SetupMenu("Choose a snapshot", m_snapshot_files, SnapshotCallback);
+
+            //m_snapshot_input_menu.SetupMenu("Choose a snapshot", Enumerable.Concat( new string[] { "<Default>" }, m_snapshot_files).ToList(), SnapshotInputCallback);
 
             if (m_startup_load_sna != null) {
                 // Check the sna list. Do a case-insensitive compare to check it's a valid .sna
-                foreach (string snaFile in m_snapshot_files) {
-                    if (String.Compare(snaFile, m_startup_load_sna, StringComparison.OrdinalIgnoreCase) == 0) {
-                        // Got it! Now just load it in.
-                        LoadSnapshotFile(m_startup_load_sna);
+                for (int n = 0; n < Manifest.Games.Length; n++) {
+                    if (String.Compare(Manifest.Games[n].Title, m_startup_load_sna, StringComparison.OrdinalIgnoreCase) == 0) {
+                        LoadSnapshotFile(n);
                         break;
                     }
                 }
+
             }
 
             GC.Collect();
@@ -277,71 +283,26 @@ namespace monocpc {
             m_paused = false;
             m_pause_menu.Close();
             m_snapshot_menu.Close();
+            m_cheats_menu.Close();
             MenuInputComponent.Disable();
 
             // Try and clean up any allocs
             GC.Collect();
         }
 
-        private void LoadSnapshotFile(string path) {
+        public void LoadSnapshotFile(int index) {
+
+            m_current_game = Manifest.Games[index];
+            m_current_game.Cheats.Reset();
             BinaryFile sna_file = null;
             try {
-                sna_file = LoadBinaryFile("sna\\" + path+".sna");
+                sna_file = LoadBinaryFile(m_current_game.File);
             }
             finally {
                 CPC.SNAData sna_data = new CPC.SNAData(sna_file.m_data);
 
                 ResetCPC();
                 sna_data.LoadSnapshot(m_emulator);
-            }
-        }
-
-        private void SnapshotCallback(int selection) {
-            if (selection >= 0) {
-                string snapshot_filename = m_snapshot_files[selection];
-                LoadSnapshotFile(snapshot_filename);
-                Unpause();
-            }
-            else {
-                m_snapshot_menu.Close();
-                m_pause_menu.ShowMenu();
-            }
-        }
-
-        private void PauseCallback(int selection) {
-            switch ((EPauseMenuOptions)selection) {
-                case EPauseMenuOptions.LoadSnapshot: {
-                        m_pause_menu.Close();
-                        m_snapshot_menu.ShowMenu();
-                    }
-                    break;
-
-                case EPauseMenuOptions.Reset: {
-                        ResetCPC();
-                        Unpause();
-                    }
-                    break;
-
-                case EPauseMenuOptions.Back:
-                case EPauseMenuOptions.Resume: {
-                        Unpause();
-                    }
-                    break;
-
-                case EPauseMenuOptions.ToggleCRTShader: {
-                        m_use_crt_shader = !m_use_crt_shader;
-                    }
-                    break;
-
-                case EPauseMenuOptions.ThrottleSpeed: {
-                        m_throttle_speed = !m_throttle_speed;
-                    }
-                    break;
-
-                case EPauseMenuOptions.Quit: {
-                        this.Exit();
-                    }
-                    break;
             }
         }
 

@@ -33,7 +33,14 @@ namespace monocpc.CPC
         private Monitor m_monitor;
 		private Keyboard m_keyboard;
 				
-		public Emulator( Audio audio, TextureDisplay texture_display )
+
+        public static Emulator Instance { get; private set; }
+
+        public static void Create(Audio audio, TextureDisplay texture_display) {
+            Instance = new Emulator(audio, texture_display);
+        }
+
+	   Emulator( Audio audio, TextureDisplay texture_display )
 		{
 			m_memory = new Memory();
 			

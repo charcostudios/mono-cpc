@@ -33,9 +33,9 @@ namespace monocpc
         private const int SUBMIT_SIZE = (SAMPLE_RATE * BYTES_PER_SAMPLE * 4) / CPC.Emulator.TARGET_FPS;
         private const int MAX_OVERLAPPED_SUBMITS = 4;                           //< Overlapped submits should only ever get this high if the game is running without frame limiting                 
 
-		////private DynamicSoundEffectInstance m_sfx;
-		
-		public Audio()
+        ////private DynamicSoundEffectInstance m_sfx;
+
+        public Audio()
 		{
 			////m_sfx = new DynamicSoundEffectInstance( SAMPLE_RATE, AudioChannels.Stereo );
 			////m_sfx.Play();

@@ -35,6 +35,14 @@ namespace monocpc.CPC
 #endif // #if EXTRA_RAM_SUPPORT
 		public const int NUM_BANK_SETUPS = 8;                       // 8 possible settings from the Gatearray for a standard 64k expansion setup
 
+        internal byte Peek(int address) {
+            return RAM[address];
+        }
+
+        internal void Poke(int address, byte value) {
+            RAM[address] = value;
+        }
+
         public const int MAX_ROMS = 256;
 
         int[] m_current_bank_setup;

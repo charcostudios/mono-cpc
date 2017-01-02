@@ -28,8 +28,8 @@
 /processorParam:TextureFormat=Compressed
 /build:DebugFont.spritefont
 
-#begin manifest.manifest
-/copy:manifest.manifest
+#begin manifest.xml
+/copy:manifest.xml
 
 #begin white.bmp
 /importer:TextureImporter
