@@ -47,14 +47,17 @@ namespace monocpc {
                     break;
 
                 case EPauseMenuOptions.Reset: {
+                        m_game.m_current_game = null;
                         m_game.ResetCPC();
                         m_game.Unpause();
                     }
                     break;
 
                 case EPauseMenuOptions.Cheats: {
-                        m_game.m_pause_menu.Close();
-                        m_game.m_cheats_menu.ShowMenu();
+                        if (m_game.m_current_game != null) {
+                            m_game.m_pause_menu.Close();
+                            m_game.m_cheats_menu.ShowMenu();
+                        }
                     }
                     break;
 
@@ -104,7 +107,6 @@ namespace monocpc {
 
     public class CheatsMenu : ListMenuComponent {
         public CheatsMenu(MainGame game, Rectangle menu_extents) : base(game, menu_extents) {
-            //m_snapshot_input_menu.SetupMenu("Choose a snapshot", Enumerable.Concat( new string[] { "<Default>" }, m_snapshot_files).ToList(), SnapshotInputCallback);
 
         }
 
