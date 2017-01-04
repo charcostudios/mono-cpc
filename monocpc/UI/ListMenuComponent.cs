@@ -22,7 +22,6 @@ namespace monocpc
 		SpriteFont m_sprite_font;
 		Texture2D m_white_texture;
 
-		Rectangle m_menu_extents;
 		string m_title;
 
         string m_intro_text;
@@ -46,13 +45,13 @@ namespace monocpc
         int m_menu_index;
         bool m_active;
         protected MainGame m_game;
+        Rectangle m_menu_extents => m_game.m_menu_extents;
 
-        public ListMenuComponent( MainGame game, Rectangle menu_extents )
+        public ListMenuComponent( MainGame game )
 			: base( game )
         {
             m_game = game;
             m_menu_choices = null;
-            m_menu_extents = menu_extents;
             m_menu_index = -1;
             m_intro_text_time = 0;
             m_active = false;

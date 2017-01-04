@@ -57,6 +57,9 @@ namespace monocpc {
         public bool m_use_crt_shader;
         public bool m_throttle_speed;
         public SnaManifest m_current_game;
+        public bool m_is_full_screen;
+        private Point m_window_position_backup;
+        public Rectangle m_menu_extents;
 
         static MainGame() {
             // Frequency is over one second. So this calculates the time for one frame, in 'Stopwatch' timer ticks.
@@ -75,18 +78,9 @@ namespace monocpc {
 
             IsFixedTimeStep = false;
             m_graphics.SynchronizeWithVerticalRetrace = false;
+
             m_graphics.PreferredBackBufferWidth = 1280;
             m_graphics.PreferredBackBufferHeight = 720;
-
-            //get user's primary screen size...
-            var _ScreenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
-            var _ScreenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
-
-            //make it full screen... (borderless if you want to is an option as well)
-            this.Window.Position = new Point(0, 0);
-            this.Window.IsBorderless = true;
-            m_graphics.PreferredBackBufferWidth = (int)_ScreenWidth;
-            m_graphics.PreferredBackBufferHeight = (int)_ScreenHeight;
 
             if (args.Length > 0) {
                 m_startup_load_sna = args[0];
@@ -115,16 +109,7 @@ namespace monocpc {
             m_skipped_last_frame = false;
         }
 
-        private BinaryFile LoadBinaryFile(string filename) {
-            filename = Path.Combine("content", filename);
-            var existingInstance = new BinaryFile();
-            existingInstance.m_data = System.IO.File.ReadAllBytes(filename);
-            existingInstance.m_data_size = existingInstance.m_data.Length;
-            return existingInstance;
-            //return Content.Load<BinaryFile>( filename );
-        }
-
-        protected override void Initialize() {
+        void InitializeScreen() {
             // 600 XNA pixels displays 200 CPC pixels. Nice fit. Leaves 120 pixels (from 720 high), for the CPC borders.
             // The width is derived from that, so it'll work on any target aspect ratio.
             // I also stretch the width a little, so it looks nicer on a widescreen set.
@@ -147,23 +132,67 @@ namespace monocpc {
                 m_graphics.GraphicsDevice.Viewport.Height);
 
             int menu_width = (screen_width / 4) * 3;
-            Rectangle menu_extents = new Rectangle(
+            m_menu_extents = new Rectangle(
                 (GraphicsDevice.Viewport.Width - menu_width) / 2,
                 0,
                 menu_width,
                 GraphicsDevice.Viewport.Height);
 
+            m_crt_effect_border.Parameters["Viewport"].SetValue(new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
+            m_crt_effect_border.Parameters["TextureHeight"].SetValue((float)(GraphicsDevice.Viewport.Height / CPC_PIXEL_HEIGHT));
+            m_crt_effect_border.Parameters["ScreenHeight"].SetValue((float)GraphicsDevice.Viewport.Height);
+            m_crt_effect_screen.Parameters["Viewport"].SetValue(new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
+            m_crt_effect_screen.Parameters["TextureHeight"].SetValue((float)TextureDisplay.MAX_SCREEN_HEIGHT);
+            m_crt_effect_screen.Parameters["ScreenHeight"].SetValue((float)m_screen_rect.Height);
+        }
+
+        public void ToggleFullscreen() {
+            m_is_full_screen = !m_is_full_screen;
+            if (m_is_full_screen) {
+                //get user's primary screen size...
+                var _ScreenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+                var _ScreenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+
+                //make it full screen... (borderless if you want to is an option as well)
+
+                m_window_position_backup = this.Window.Position;
+                this.Window.Position = new Point(0, 0);
+                this.Window.IsBorderless = true;
+                m_graphics.PreferredBackBufferWidth = (int)_ScreenWidth;
+                m_graphics.PreferredBackBufferHeight = (int)_ScreenHeight;
+            }
+            else {
+                this.Window.Position = m_window_position_backup;
+                m_graphics.PreferredBackBufferWidth = 1280;
+                m_graphics.PreferredBackBufferHeight = 720;
+                this.Window.IsBorderless = false;
+            }
+            m_graphics.ApplyChanges();
+            InitializeScreen();
+        }
+
+        private BinaryFile LoadBinaryFile(string filename) {
+            filename = Path.Combine("content", filename);
+            var existingInstance = new BinaryFile();
+            existingInstance.m_data = System.IO.File.ReadAllBytes(filename);
+            existingInstance.m_data_size = existingInstance.m_data.Length;
+            return existingInstance;
+            //return Content.Load<BinaryFile>( filename );
+        }
+
+        protected override void Initialize() {
+
             // List snapshots that can be played
             //GetSnapshotFileList();
             Manifest.Load("content\\manifest.xml");
 
-            m_pause_menu = new PauseMenu(this, menu_extents);
+            m_pause_menu = new PauseMenu(this);
             Components.Add(m_pause_menu);
 
-            m_snapshot_menu = new LoadSnapShotMenu(this, menu_extents);
+            m_snapshot_menu = new LoadSnapShotMenu(this);
             Components.Add(m_snapshot_menu);
 
-            m_cheats_menu = new CheatsMenu(this, menu_extents);
+            m_cheats_menu = new CheatsMenu(this);
             Components.Add(m_cheats_menu);
 
             Components.Add(new MenuInputComponent(this));
@@ -180,6 +209,7 @@ namespace monocpc {
 #endif // WINDOWS
 
             base.Initialize();
+            InitializeScreen();
         }
 
         //private void GetSnapshotFileList() {
@@ -214,15 +244,9 @@ namespace monocpc {
             m_white_texture = Content.Load<Texture2D>("White");
 
             m_crt_effect_border = Content.Load<Effect>("crt");
-            m_crt_effect_border.Parameters["Viewport"].SetValue(new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
-            m_crt_effect_border.Parameters["TextureHeight"].SetValue((float)(GraphicsDevice.Viewport.Height / CPC_PIXEL_HEIGHT));
-            m_crt_effect_border.Parameters["ScreenHeight"].SetValue((float)GraphicsDevice.Viewport.Height);
-
+          
             m_crt_effect_screen = m_crt_effect_border.Clone();
-            m_crt_effect_screen.Parameters["Viewport"].SetValue(new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
-            m_crt_effect_screen.Parameters["TextureHeight"].SetValue((float)TextureDisplay.MAX_SCREEN_HEIGHT);
-            m_crt_effect_screen.Parameters["ScreenHeight"].SetValue((float)m_screen_rect.Height);
-
+         
             m_texture_display = new TextureDisplay(GraphicsDevice);
             m_audio = new Audio();
 

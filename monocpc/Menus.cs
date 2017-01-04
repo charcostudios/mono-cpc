@@ -16,11 +16,12 @@ namespace monocpc {
         Reset,
         ToggleCRTShader,
         ThrottleSpeed,
+        FullScreen,
         Quit
     }
 
     public class PauseMenu : ListMenuComponent {
-        public PauseMenu(MainGame game, Rectangle menu_extents) : base(game, menu_extents) { }
+        public PauseMenu(MainGame game) : base(game) { }
 
         protected override void LoadContent() {
             List<string> pause_menu_options = new List<string>();
@@ -30,11 +31,13 @@ namespace monocpc {
             pause_menu_options.Add("Reset CPC");		//Reset
             pause_menu_options.Add("Toggle CRT Shader");	//ToggleCRTShader
             pause_menu_options.Add("Throttle Speed");   //ThrottleSpeed
+            pause_menu_options.Add("Full screen");   //ThrottleSpeed
             pause_menu_options.Add("Quit");			//Quit
 
             SetupMenu("MONOCPC - Gavin Pugh 2011 - CharcoStudios 2016", pause_menu_options);
             SetupMenuToggle((int)EPauseMenuOptions.ThrottleSpeed, m_game.m_throttle_speed);
             SetupMenuToggle((int)EPauseMenuOptions.ToggleCRTShader, m_game.m_use_crt_shader);
+            SetupMenuToggle((int)EPauseMenuOptions.FullScreen, m_game.m_is_full_screen);
             base.LoadContent();
         }
 
@@ -76,6 +79,10 @@ namespace monocpc {
                         m_game.m_throttle_speed = !m_game.m_throttle_speed;
                     }
                     break;
+                case EPauseMenuOptions.FullScreen: {
+                        m_game.ToggleFullscreen();
+                    }
+                    break;
 
                 case EPauseMenuOptions.Quit: {
                         m_game.Exit();
@@ -86,7 +93,7 @@ namespace monocpc {
     }
 
     public class LoadSnapShotMenu : ListMenuComponent {
-        public LoadSnapShotMenu(MainGame game, Rectangle menu_extents) : base(game, menu_extents) { }
+        public LoadSnapShotMenu(MainGame game) : base(game) { }
 
         protected override void LoadContent() {
             SetupMenu("Choose a snapshot", Manifest.Games.Select(g => g.Title).ToList());
@@ -106,7 +113,7 @@ namespace monocpc {
     }
 
     public class CheatsMenu : ListMenuComponent {
-        public CheatsMenu(MainGame game, Rectangle menu_extents) : base(game, menu_extents) {
+        public CheatsMenu(MainGame game) : base(game) {
 
         }
 
