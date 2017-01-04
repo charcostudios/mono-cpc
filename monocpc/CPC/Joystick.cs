@@ -77,7 +77,7 @@ namespace monocpc.CPC
 				}
             }
 
-#if XBOX
+//#if XBOX
             // HACK: Hack to map enter and space onto Xbox controlpads
             const int ENTER_KEY_ROW = 0x02;
             const int ENTER_KEY_BIT = 0x02;
@@ -98,7 +98,7 @@ namespace monocpc.CPC
 					keyboard_read_data &= ( ~( 1 << SPACE_KEY_BIT ) );
                 }
             }
-#endif // XBOX
+//#endif // XBOX
         }
 	}
 }

@@ -78,15 +78,15 @@ namespace monocpc {
             m_graphics.PreferredBackBufferWidth = 1280;
             m_graphics.PreferredBackBufferHeight = 720;
 
-           // //get user's primary screen size...
-           //var _ScreenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
-           //var _ScreenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+            //get user's primary screen size...
+            var _ScreenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+            var _ScreenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
 
-            // //make it full screen... (borderless if you want to is an option as well)
-            // this.Window.Position = new Point(0, 0);
-            // this.Window.IsBorderless = true;
-            // m_graphics.PreferredBackBufferWidth = (int)_ScreenWidth;
-            // m_graphics.PreferredBackBufferHeight = (int)_ScreenHeight;
+            //make it full screen... (borderless if you want to is an option as well)
+            this.Window.Position = new Point(0, 0);
+            this.Window.IsBorderless = true;
+            m_graphics.PreferredBackBufferWidth = (int)_ScreenWidth;
+            m_graphics.PreferredBackBufferHeight = (int)_ScreenHeight;
 
             if (args.Length > 0) {
                 m_startup_load_sna = args[0];
